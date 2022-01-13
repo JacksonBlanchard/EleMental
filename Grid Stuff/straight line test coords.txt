@@ -1,0 +1,45 @@
+character tile 0,-4
+x:-4 y:-4 z:0
+
+middle tiles -1,-5 | -1,-4
+x:-5 y:-4 z:-1 | x:-4 y:-3 z:-1
+
+middle point
+x:-4.5 y:-3.5 z:-1
+rounded
+x:-5 y:-4 z:-1
+
+hover tile -2,4
+x:-5 y:-3 z:-2
+
+
+
+character tile 0,-4
+x:-4 y:-4 z:0
+
+second tile -1,-4
+x:-4 y:-3 z:-1
+
+middle point
+x:-4.3 y:-3.3 z:-1
+rounded
+x:2 y:-3 z:-1
+
+third tile -2,4
+x:-5 y:-3 z:-2
+
+middle point
+x:-4.6 y:-2.3 z:-2.3
+rounded
+x:-5 y:-2 z:-2
+
+hover tile -3,4
+x:-5 y:-2 z:-3
+
+
+
+
+
+
+
+

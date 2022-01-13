@@ -1,0 +1,39 @@
+default:
+curr = neutral@
+temp = null
+atk = neutral@
+
+view:
+curr = neutral@
+temp = fire@
+atk = neutral
+
+reset:
+curr = neutral@
+temp = fire
+atk = neutral@
+
+view:
+curr = neutral@
+temp = fire@
+atk = neutral
+
+atk:
+curr = neutral@
+temp = fire
+atk = fire@
+
+view:
+curr = neutral@
+temp = water@
+atk = fire
+
+reset:
+curr = neutral@
+temp = water
+atk = fire@
+
+execute:
+curr = fire@@
+temp = ?
+atk = fire

@@ -1,0 +1,13 @@
+Weak,Neutral,Weak,Neutral,Neutral,Strong,Strong,Spread 1,Strong,Weak,Neutralize 1,Neutral,Weak
+Strong,Weak,Strong,Neutral,Neutral,Shrink 1,Weak,Weak,Weak,Neutral,Weak,Neutral,Strong
+Strong,Weak,Weak,Weak,Block,Neutral,Strong,Weak,Weak,Neutral,Weak,Neutral,Weak
+Strong,Neutral,Neutral,Weak,Weak,Weak,Weak,Strong,Weak,Weak,Weak,Strong,Strong
+Neutral,Spread 2,Block,Strong,Contiguous,Neutral,Contiguous,Weak,Neutral,Weak,Neutralize 1,Neutral,Neutral
+Shrink 1,Spread 1,Strong,Neutral,Neutral,Weak,Weak,Strong,Neutral,Weak,Neutral,Neutral,Neutral
+Weak,Weak,Strong,Strong,Strong,Strong,Weak,Neutral,Neutral,Strong,Weak,Weak,Weak
+Shrink 1,Strong,Spread 1,Spread 1,Neutral,Weak,Weak,Weak,Weak,Spread 1,Weak,Neutralize 1,Weak
+Weak,Spread 1,Spread 1,Spread 1,Neutral,Neutral,Weak,Strong,Weak,Weak,Weak,Weak,Strong
+Strong,Weak,Weak,Neutral,Strong,Neutral,Weak,Shrink 1,Weak,Spread 1,Spread 2,Neutral,Weak
+Neutralize 1,Neutral,Neutral,Weak,Neutralize 1,Neutral,Neutral,Strong,Neutral,Spread 2,Spread 1,Strong,Neutral
+Neutral,Strong,Strong,Weak,Weak,Strong,Strong,Strong,Strong,Weak,Weak,Weak,Neutral
+Neutral,Strong,Weak,Strong,Neutral,Neutral,Weak,Neutral,Weak,Strong,Strong,Neutral,Weak
