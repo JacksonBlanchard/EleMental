@@ -11,10 +11,10 @@ public class UIManager : MonoBehaviour
     public GameObject textPanel;
     public TeamManager teamManager;
 
-    // called by Play button
+    // Called by Play button
     public void SetupGameUI()
     {
-        // start by clearing the UI
+        // Start by clearing the UI
         ClearUI();
 
         switch(teamManager.NumTeams())
@@ -24,21 +24,17 @@ public class UIManager : MonoBehaviour
                 // create UI for all Elementors in Team 0, and add to playerPanel
                 foreach(Elementor e in teamManager.GetTeamElementors(0))
                 {
-                    // create new UI GameObject and add it to the playerPanel
-                    CharUI charUI = Instantiate(charUIprefab, playerPanel.transform).GetComponentInChildren<CharUI>();
-                    // store the CharUI component in the associated elementor
-                    e.UI = charUI;
+                    // Create a new UI GameObject and add it to the playerPanel.
+                    // Then store the ElementorUI component in the associated Elementor.
+                    e.UI = Instantiate(charUIprefab, playerPanel.transform).GetComponentInChildren<ElementorUI>();
                 }
-
                 // create UI for all Elementors in Team 1, and add to opponentPanel
-                foreach (Elementor e in teamManager.GetTeamElementors(1))
+                foreach(Elementor e in teamManager.GetTeamElementors(1))
                 {
-                    // create new UI GameObject and add it to the opponentPanel
-                    CharUI charUI = Instantiate(charUIprefab, opponentPanel.transform).GetComponentInChildren<CharUI>();
-                    // store the CharUI component in the associated elementor
-                    e.UI = charUI;
+                    // Create a new UI GameObject and add it to the opponentPanel.
+                    // Then store the ElementorUI component in the associated Elementor.
+                    e.UI = Instantiate(charUIprefab, opponentPanel.transform).GetComponentInChildren<ElementorUI>();
                 }
-
                 break;
             default:
                 break;
@@ -52,8 +48,8 @@ public class UIManager : MonoBehaviour
 
     public void ClearUI()
     {
-        // destroy all player elementor UIs
-        foreach (GameObject ui in playerPanel.transform)
+        // Destroy all ElementorUIs
+        foreach(GameObject ui in playerPanel.transform)
         {
             Destroy(ui);
         }
