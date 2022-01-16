@@ -21,22 +21,22 @@ public class UIManager : MonoBehaviour
         {
             // hardcode for now
             case 2:
-                // create UI for all Characters in Team 0, and add to playerPanel
-                foreach(Character c in teamManager.GetTeamCharacters(0))
+                // create UI for all Elementors in Team 0, and add to playerPanel
+                foreach(Elementor e in teamManager.GetTeamElementors(0))
                 {
                     // create new UI GameObject and add it to the playerPanel
                     CharUI charUI = Instantiate(charUIprefab, playerPanel.transform).GetComponentInChildren<CharUI>();
-                    // store the CharUI component in the associated character
-                    c.UI = charUI;
+                    // store the CharUI component in the associated elementor
+                    e.UI = charUI;
                 }
 
-                // create UI for all Characters in Team 1, and add to opponentPanel
-                foreach (Character c in teamManager.GetTeamCharacters(1))
+                // create UI for all Elementors in Team 1, and add to opponentPanel
+                foreach (Elementor e in teamManager.GetTeamElementors(1))
                 {
                     // create new UI GameObject and add it to the opponentPanel
                     CharUI charUI = Instantiate(charUIprefab, opponentPanel.transform).GetComponentInChildren<CharUI>();
-                    // store the CharUI component in the associated character
-                    c.UI = charUI;
+                    // store the CharUI component in the associated elementor
+                    e.UI = charUI;
                 }
 
                 break;
@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
 
     public void ClearUI()
     {
-        // destroy all player character UIs
+        // destroy all player elementor UIs
         foreach (GameObject ui in playerPanel.transform)
         {
             Destroy(ui);
@@ -67,9 +67,9 @@ public class UIManager : MonoBehaviour
     {
         foreach(Team t in teamManager.GetTeams())
         {
-            foreach(Character c in t.GetCharacters())
+            foreach(Elementor e in t.GetElementors())
             {
-                c.UpdateCharacterState();
+                e.UpdateElementorState();
             }
         }
     }
