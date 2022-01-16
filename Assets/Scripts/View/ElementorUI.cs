@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class CharUI : MonoBehaviour
+public class ElementorUI : MonoBehaviour
 {
-    public Text charName;
+    public Text elementorName;
     public Slider healthBar;
     public Button actionStatusBtn;
     public Button submitBtn;
@@ -12,34 +12,38 @@ public class CharUI : MonoBehaviour
     public GameObject attackBtnParent;
     public GameObject movementBtnParent;
 
-    public void Init(Character character)
+    public void Init(Elementor elementor)
     {
-        name = character.name + "_UI";
-        charName.text = character.name;
-        healthBar.maxValue = character.maxHealth;
-        healthBar.value = character.currentHealth;
+        name = elementor.Name + "_UI";
+        elementorName.text = elementor.Name;
+        healthBar.maxValue = elementor.MaxHealth;
+        healthBar.value = elementor.CurrentHealth;
 
         // attach submit method to button
-        submitBtn.onClick.AddListener(() => { character.SubmitTurn(); });
+        submitBtn.onClick.AddListener(() => { elementor.SubmitTurn(); });
 
         // actionStatusBtn activates
         actionStatusBtn.onClick.AddListener(() => { ToggleMenuPanel(); });
         // init ActionStatusBtn text
-        UpdateCharState(CharacterStateEnum.IDLE);
+        UpdateCharState(ElementorStateEnum.IDLE);
 
         // set actions
-        foreach (Action action in character.Actions)
+        foreach (Action action in elementor.Actions)
         {
             Button btn;
             if (action.GetType().Equals(typeof(Movement)))
+            {
                 btn = Instantiate(actionBtnPrefab, movementBtnParent.transform);
+            }
             else
+            {
                 btn = Instantiate(actionBtnPrefab, attackBtnParent.transform);
+            }
 
             // set Action and listeners for action buttons
             btn.name = action.Name + " Btn";
             btn.GetComponent<ActionButton>().SetAction(action);
-            btn.onClick.AddListener(() => { character.PlanAction(action); character.SendCharacter(); });
+            btn.onClick.AddListener(() => { elementor.PlanAction(action); elementor.SendElementor(); });
         }
     }
 
@@ -53,7 +57,7 @@ public class CharUI : MonoBehaviour
         menuPanel.SetActive(active);
     }
 
-    public void UpdateCharState(CharacterStateEnum state)
+    public void UpdateCharState(ElementorStateEnum state)
     {
         actionStatusBtn.GetComponentInChildren<Text>().text = state.ToString();
     }
@@ -62,6 +66,8 @@ public class CharUI : MonoBehaviour
     {
         healthBar.value = health;
         if (health == 0)
+        {
             enabled = false;
+        }
     }
 }
