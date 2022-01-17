@@ -2982,13 +2982,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92475af4c577fe49bd72e973271b081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xTileGap: 1.5
-  zTileGap: 1.3
-  hexTilePrefab: {fileID: 2404996005632796914, guid: 8053d70ad849bf04daa5257bd8a3cf28,
+  m_xTileGap: 1.5
+  m_zTileGap: 1.3
+  m_hexTilePrefab: {fileID: 2404996005632796914, guid: 8053d70ad849bf04daa5257bd8a3cf28,
     type: 3}
-  elementManager: {fileID: 1526210962}
-  teamManager: {fileID: 1263496206}
-  uiManager: {fileID: 1906302144}
+  m_elementManager: {fileID: 1526210962}
+  m_teamManager: {fileID: 1263496206}
+  m_uiManager: {fileID: 1906302144}
 --- !u!4 &816926224
 Transform:
   m_ObjectHideFlags: 0
@@ -7331,11 +7331,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d4ce474d213524e98603f0101798ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireCharPrefab: {fileID: 0}
-  waterCharPrefab: {fileID: 0}
-  plantCharPrefab: {fileID: 0}
-  lightningCharPrefab: {fileID: 0}
-  elementManager: {fileID: 0}
 --- !u!1 &1849636738
 GameObject:
   m_ObjectHideFlags: 0
