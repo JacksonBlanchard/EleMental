@@ -119,7 +119,7 @@ public class ElementManager : MonoBehaviour
             return (ChangeEnum)elementMatchupChart[(int)atkType,(int)currType];
     }
 
-    // TODO: redo the use of this method in CharacterSelection
+    // TODO: redo the use of this method in ElementorSelection
     public int GetChange(int atkType, int defType)
     {
         if ((ElementEnum)defType == ElementEnum.NEUTRAL)

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class CharacterSelection : MonoBehaviour
+public class ElementorSelection : MonoBehaviour
 {
     public GameObject fireCharPrefab;
     public GameObject waterCharPrefab;
@@ -19,7 +19,9 @@ public class CharacterSelection : MonoBehaviour
     {
         switch(element)
         {
-
+            default:
+                Debug.Log("Hit empty switch case in ElementorSelection::SetPlayerChar()");
+                break;
         }
     }
 
@@ -27,7 +29,9 @@ public class CharacterSelection : MonoBehaviour
     {
         switch(element)
         {
-
+            default:
+                Debug.Log("Hit empty switch case in ElementorSelection::SetEnemyChar()");
+                break;
         }
     }
 
@@ -98,7 +102,7 @@ public class CharacterSelection : MonoBehaviour
 
     public void ResetText()
     {
-        turnText.text = "Pick " + numPicks + " character";
+        turnText.text = "Pick " + numPicks + " elementor";
         if (numPicks != 1)
             turnText.text += "s";
         turnText.text += ".";
@@ -163,7 +167,7 @@ public class CharacterSelection : MonoBehaviour
                     tempCharPrefab = fireCharPrefab;
                     break;
             }
-            teams[0].GetComponent<Team>().AddCharacter(tempCharPrefab);
+            teams[0].GetComponent<Team>().AddElementor(tempCharPrefab);
             EventSystem.current.currentSelectedGameObject.GetComponent<Button>().interactable = false;
             availableTypes[index] = 0; // make type unavailable
 
@@ -221,7 +225,7 @@ public class CharacterSelection : MonoBehaviour
                             opponentsChoice = "Fire";
                             break;
                     }
-                    teams[1].GetComponent<Team>().AddCharacter(tempCharPrefab);
+                    teams[1].GetComponent<Team>().AddElementor(tempCharPrefab);
                     GameObject.Find(opponentsChoice).GetComponent<Button>().interactable = false;
                     break;
                 }

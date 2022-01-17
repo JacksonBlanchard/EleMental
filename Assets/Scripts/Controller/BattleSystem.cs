@@ -17,7 +17,7 @@ public class BattleSystem : MonoBehaviour
     public TeamManager teamManager;
 
     private Turn currTurn;
-    public Character CurrCharacter { get; set; }
+    public Elementor CurrElementor { get; set; }
     public Action CurrAction { get; set; }
 
     private HexTile hoverTile;
@@ -45,10 +45,10 @@ public class BattleSystem : MonoBehaviour
             {
                 // adjust the Action using the hover tile
                 hoverTile = rayHit.collider.gameObject.GetComponent<HexTile>();
-                board.AdjustAction(CurrCharacter, hoverTile);
+                board.AdjustAction(CurrElementor, hoverTile);
 
                 // get the actual path area for color viewing
-                pathAreaPreview = board.GetActionArea(CurrCharacter.GetPlanningAction());
+                pathAreaPreview = board.GetActionArea(CurrElementor.GetPlanningAction());
                 board.ViewTiles(pathAreaPreview, CurrAction.Element);
             }
 
@@ -70,6 +70,7 @@ public class BattleSystem : MonoBehaviour
 
     void DoubleClick()
     {
+        /*
         bool one_click = false;
         bool timer_running;
         float timer_for_double_click;
@@ -104,6 +105,7 @@ public class BattleSystem : MonoBehaviour
 
             }
         }
+        */
     }
 
     void UpdateBattleState()
@@ -122,17 +124,17 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    public void SetCurrCharacter(Character c)
+    public void SetCurrElementor(Elementor c)
     {
-        // store current character and action
-        CurrCharacter = c;
-        CurrAction = CurrCharacter.GetPlanningAction();
+        // store current elementor and action
+        CurrElementor = c;
+        CurrAction = CurrElementor.GetPlanningAction();
 
         // clear the previous Action preview
         board.UnviewTiles(pathAreaPreview);
         pathAreaPreview.Clear();
 
-        // initialize start tile as the Character Tile for preview
+        // initialize start tile as the Elementor Tile for preview
         CurrAction.StartTile = board.GetCharTile(c);
         pathAreaPreview = board.GetActionArea(CurrAction);
         board.ViewTiles(pathAreaPreview, CurrAction.Element);
@@ -140,28 +142,28 @@ public class BattleSystem : MonoBehaviour
 
     public void SubmitAction()
     {
-        // update the Action and Character state
-        CurrCharacter.SubmitAction(CurrAction);
+        // update the Action and Elementor state
+        CurrElementor.SubmitAction(CurrAction);
 
         // display the selected tiles and clear the preview list
         board.SubmitTiles(pathAreaPreview);
         pathAreaPreview.Clear();
 
-        // add the Character to the turn
-        currTurn.AddCharacter(CurrCharacter);
+        // add the Elementor to the turn
+        currTurn.AddElementor(CurrElementor);
     }
 
     public void CancelAction()
     {
-        // reset the Action and Character state
+        // reset the Action and Elementor state
         if(CurrAction != null)
-            CurrCharacter.CancelAction(CurrAction);
+            CurrElementor.CancelAction(CurrAction);
 
         // clear the action preview and preview list
         board.UnviewTiles(pathAreaPreview);
         pathAreaPreview.Clear();
 
-        // TODO: Remove character from turn if they have no SubmittedActions
+        // TODO: Remove elementor from turn if they have no SubmittedActions
     }
 
     void ExecuteTurn()
@@ -169,15 +171,15 @@ public class BattleSystem : MonoBehaviour
         // reset planning preview
         board.ResetAllTiles();
 
-        // loop over each character
-        foreach (Character character in currTurn.Characters)
+        // loop over each elementor
+        foreach (Elementor elementor in currTurn.Elementors)
         {
-            foreach(Action action in character.SubmittedActions)
+            foreach(Action action in elementor.SubmittedActions)
             {
-                board.ExecuteAction(character, action);
+                board.ExecuteAction(elementor, action);
             }
-            // reset character when their turn is complete
-            character.ResetSubmittedActions();
+            // reset elementor when their turn is complete
+            elementor.ResetSubmittedActions();
         }
         // reset turn when it has completed
         currTurn.ResetTurn();
