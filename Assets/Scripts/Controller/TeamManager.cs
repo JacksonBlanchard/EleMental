@@ -39,7 +39,7 @@ public class TeamManager : MonoBehaviour
         List<GameObject> team2chars = new List<GameObject>() { waterCharPrefab };
         CreateTeam(team2chars);
         
-        // have board set character positions
+        // have board set elementor positions
         GameObject.Find("Board").GetComponent<Board>().SetCharPositions();
 
         //turnText = GameObject.Find("TurnText").GetComponent<Text>();
@@ -63,9 +63,9 @@ public class TeamManager : MonoBehaviour
         // create team GameObject and add Team script component
         GameObject team = new GameObject(name, typeof(Team));
         team.transform.parent = transform;
-        // add the specified list of characters to the team
+        // add the specified list of elementors to the team
         foreach(GameObject charPrefab in charPrefabs)
-            team.GetComponent<Team>().AddCharacter(charPrefab);
+            team.GetComponent<Team>().AddElementor(charPrefab);
     }
 
     public Team GetTeam(int index)
@@ -73,9 +73,9 @@ public class TeamManager : MonoBehaviour
         return transform.GetChild(index).GetComponent<Team>();
     }
 
-    public List<Character> GetTeamCharacters(int teamNum)
+    public List<Elementor> GetTeamElementors(int teamNum)
     {
-        return GetTeam(teamNum).GetCharacters();
+        return GetTeam(teamNum).GetElementors();
     }
 
     public List<Team> GetTeams()
@@ -118,7 +118,7 @@ public class TeamManager : MonoBehaviour
 
     public void ResetText()
     {
-        turnText.text = "Pick " + numPicks + " character";
+        turnText.text = "Pick " + numPicks + " elementor";
         if (numPicks != 1)
             turnText.text += "s";
         turnText.text += ".";
@@ -154,7 +154,7 @@ public class TeamManager : MonoBehaviour
                     tempCharPrefab = fireCharPrefab;
                     break;
             }
-            transform.GetChild(0).GetComponent<Team>().AddCharacter(tempCharPrefab);
+            transform.GetChild(0).GetComponent<Team>().AddElementor(tempCharPrefab);
             EventSystem.current.currentSelectedGameObject.GetComponent<Button>().interactable = false;
             //availableTypes[index] = 0; // make type unavailable
 
@@ -166,13 +166,13 @@ public class TeamManager : MonoBehaviour
 
     private void OpponentChoose(int playersChoice)
     {
+        /*
         string opponentsChoice;
         int random = Random.Range(1, 101);
         int x_index = 0;
         float total = 0;
         float count = 0;
 
-        /*
         for (int i = 0; i < typeManager.NumberOfTypes; i++)
         {
             if (availableTypes[i] == 1)
@@ -211,7 +211,7 @@ public class TeamManager : MonoBehaviour
                             opponentsChoice = "Fire";
                             break;
                     }
-                    teams[1].GetComponent<Team>().AddCharacter(tempCharPrefab);
+                    teams[1].GetComponent<Team>().AddElementor(tempCharPrefab);
                     GameObject.Find(opponentsChoice).GetComponent<Button>().interactable = false;
                     break;
                 }
@@ -252,7 +252,7 @@ public class TeamManager : MonoBehaviour
         foreach (Transform t in transform)
         {
             Team team = t.GetComponent<Team>();
-            // if all player characters in the Team are ready then generate AI actions
+            // if all player elementors in the Team are ready then generate AI actions
             //if(team.GetPlayerActionState() == ActionStateEnum.READY)
             //    team.ChooseAIActions();
 
