@@ -5,39 +5,39 @@ using UnityEngine;
 public class Turn
 {
     // ordered by speed
-    public List<Character> Characters { get; }
+    public List<Elementor> Elementors { get; }
 
     public Turn()
     {
-        Characters = new List<Character>();
+        Elementors = new List<Elementor>();
     }
 
     public void ResetTurn()
     {
-        Characters.Clear();
+        Elementors.Clear();
     }
 
-    public void SortCharacters()
+    public void SortElementors()
     {
-        Characters.Sort((c1, c2) => c2.speed.CompareTo(c1.speed));
+        Elementors.Sort((e1, e2) => e2.Speed.CompareTo(e1.Speed));
     }
 
-    public void AddCharacter(Character character)
+    public void AddElementor(Elementor elementor)
     {
-        if(!Characters.Contains(character))
-            Characters.Add(character);
+        if(!Elementors.Contains(elementor))
+            Elementors.Add(elementor);
 
-        // sort the characters by speed every time a new one is added
-        SortCharacters();
+        // sort the elementors by speed every time a new one is added
+        SortElementors();
     }
 
-    public void RemoveCharacter(Character character)
+    public void RemoveElementor(Elementor elementor)
     {
-        foreach(Character c in Characters)
+        foreach(Elementor e in Elementors)
         {
-            if(c == character)
+            if(e == elementor)
             {
-                Characters.Remove(c);
+                Elementors.Remove(e);
             }
         }
     }
