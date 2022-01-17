@@ -8,8 +8,9 @@ public enum DirectionEnum { SELF_SELECT, E_SELECT, SE_SELECT, SW_SELECT, W_SELEC
 
 public class Board : MonoBehaviour
 {
-    private int m_boardWidth;
-    private int m_boardLength;
+    private int m_rows;
+    private int m_cols;
+    private int m_cornerCutSize;
     public float m_xTileGap = 1.5f;
     public float m_zTileGap = 1.3f;
     public GameObject m_hexTilePrefab;
@@ -21,23 +22,27 @@ public class Board : MonoBehaviour
 
     void Start()
     {
-        if (m_boardWidth == 0 || m_boardLength == 0)
+        if (m_rows == 0 || m_cols == 0)
         {
-            SetRadius(11);
+            //SetRadius(5);
+            SetDimensions(8, 13, 5);
         }
     }
 
-    public void SetRadius(int size)
+    public void SetRadius(int radius)
     {
-        m_boardWidth = size;
-        m_boardLength = size;
+        // include center tile
+        m_rows = 2 * radius + 1;
+        m_cols = 2 * radius + 1;
+        m_cornerCutSize = radius;
         GenerateBoard();
     }
 
-    private void SetDimensions(int boardWidth, int boardLength)
+    private void SetDimensions(int rows, int cols, int cornerCutSize)
     {
-        m_boardWidth = boardWidth;
-        m_boardLength = boardLength;
+        m_rows = rows;
+        m_cols = cols;
+        m_cornerCutSize = cornerCutSize;
         GenerateBoard();
     }
 
@@ -55,7 +60,7 @@ public class Board : MonoBehaviour
 
     public void GenerateBoard()
     {
-        // Erase the current board.
+        // Erase the current board
         if (transform.childCount != 0)
         {
             foreach (Transform child in transform)
@@ -64,53 +69,68 @@ public class Board : MonoBehaviour
             }
         }
  
-        // Initialize 2D HexTile array.
-        m_tiles = new HexTile[m_boardLength, m_boardWidth];
-
-        /* 
-        -------------------
-        | 0,0 | 0,1 | 0,2 |
-        | nul | hex | hex |
-        |------------------
-        | 1,0 | 1,1 | 1,2 |
-        | hex | hex | hex |
-        |------------------
-        | 2,0 | 2,1 | 2,2 |
-        | hex | hex | nul |
-        -------------------
+        /*
+           Example 3x3 Array
+          -------------------
+          | 0,0 | 0,1 | 0,2 |
+          | nul | hex | hex |
+          |------------------
+          | 1,0 | 1,1 | 1,2 |
+          | hex | hex | hex |
+          |------------------
+          | 2,0 | 2,1 | 2,2 |
+          | hex | hex | nul |
+          -------------------
         */
 
+        // Initialize 2D HexTile array.
+        m_tiles = new HexTile[m_rows, m_cols];
+
+        int middleRow = m_rows / 2;
+        int middleCol = m_cols / 2;
+        float xHalfGap = m_zTileGap / 2f;
+
+        // Offset from (0x,0y,0z) for tile GameObject positions
+        float xOffset;
+        float zOffset;
+
         // Generate the new board.
-        for (int i=0; i<m_boardWidth; i++)
+        for (int i = 0; i < m_rows; i++)
         {
-            for (int j=0; j<m_boardLength; j++)
+            // Initialize the starting offset for each row.
+            // Horizontal (x) axis moves half the gap for each row down.
+            // Vertical (z) axis moves the full gap for each row down.
+            xOffset = i * xHalfGap;
+            zOffset = i * -m_zTileGap;
+
+            for (int j = 0; j < m_cols; j++)
             {
-                // top left corner
-                if (i < m_boardWidth / 2 && j < m_boardWidth / 2)
+                // Top Left Corner: less than the line value from [middle,0] -> [0,middle]
+                if (i + j < m_cornerCutSize)
                 {
                     m_tiles[i, j] = null;
-                    continue;
                 }
-                // bottom right corner
-                if (i > m_boardWidth / 2 && j < m_boardLength / 2)
+                // Bottom Right Corner: more than the line value from [middle,size] -> [size,middle]
+                else if (i + j > (m_rows - 1) + (m_cols - 1) - m_cornerCutSize)
                 {
                     m_tiles[i, j] = null;
-                    continue;
+                }
+                else
+                {
+                    // Otherwise create and set up new tile GameObject.
+                    GameObject tile = Instantiate(m_hexTilePrefab, new Vector3(xOffset, 0, zOffset), Quaternion.identity);
+                    tile.name = "Tile[" + i + "," + j + "]";
+                    tile.GetComponent<HexTile>().SetCoordinates(i, j);
+                    tile.transform.parent = transform;
+                    tile.layer = gameObject.layer;
+                    // Add the new HexTile Component to the 2D HexTile array.
+                    m_tiles[i, j] = tile.GetComponent<HexTile>();
                 }
 
-                // Otherwise create and set up new tile GameObject.
-                GameObject tile = Instantiate(m_hexTilePrefab, new Vector3(m_xTileGap * (i + 0.5f), 0, m_zTileGap * j), Quaternion.identity);
-                tile.name = "Tile[" + i + "," + j + "]";
-                tile.GetComponent<HexTile>().SetCoordinates(i, j);
-                tile.transform.parent = transform;
-                tile.layer = gameObject.layer;
-                // Add the new HexTile Component to the 2D HexTile array.
-                m_tiles[i, j] = tile.GetComponent<HexTile>();
+                // Increase the horizontal offset one tile gap
+                xOffset += m_xTileGap;
             }
         }
-
-        // OBSOLETE: ensure board persists to game scene
-        // DontDestroyOnLoad(this);
     }
 
     public void SaveBoard()
