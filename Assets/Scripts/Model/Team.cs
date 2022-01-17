@@ -11,17 +11,17 @@ public class Team : MonoBehaviour
         state = ActionStateEnum.IDLE;
     }
 
-    public void AddCharacter(GameObject charPrefab)
+    public void AddElementor(GameObject charPrefab)
     {
         Instantiate(charPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
     }
 
-    public GameObject GetCharacterGO(int index)
+    public GameObject GetElementorGO(int index)
     {
         return transform.GetChild(index).gameObject;
     }
 
-    public GameObject GetCharacterGO(string name)
+    public GameObject GetElementorGO(string name)
     {
         foreach(Transform c in transform)
         {
@@ -31,12 +31,12 @@ public class Team : MonoBehaviour
         return null;
     }
 
-    public List<Character> GetCharacters()
+    public List<Elementor> GetElementors()
     {
         // loop over transform children and add them to a new list
-        List<Character> chars = new List<Character>();
+        List<Elementor> chars = new List<Elementor>();
         foreach(Transform t in transform)
-            chars.Add(t.GetComponent<Character>());
+            chars.Add(t.GetComponent<Elementor>());
         return chars;
     }
 
@@ -47,8 +47,8 @@ public class Team : MonoBehaviour
 
     public void ResetTeam()
     {
-        foreach(GameObject character in transform)
-            Destroy(character.gameObject);
+        foreach(GameObject elementor in transform)
+            Destroy(elementor.gameObject);
     }
 
     public ActionStateEnum GetActionState()
@@ -56,10 +56,10 @@ public class Team : MonoBehaviour
         ActionStateEnum teamState = ActionStateEnum.READY;
         foreach(Transform t in transform)
         {
-            CharacterStateEnum charState = t.GetComponent<Character>().state;
-            if (charState == CharacterStateEnum.PLANNING)
+            ElementorStateEnum charState = t.GetComponent<Elementor>().State;
+            if (charState == ElementorStateEnum.PLANNING)
                 return ActionStateEnum.PLANNING;
-            else if (charState == CharacterStateEnum.SUBMITTED)
+            else if (charState == ElementorStateEnum.SUBMITTED)
                 teamState = ActionStateEnum.READY;
             else
                 teamState = ActionStateEnum.IDLE;
@@ -67,13 +67,16 @@ public class Team : MonoBehaviour
         return teamState;
     }
 
+    // Long-term goal
     public void ChooseAIActions()
     {
+        /*
         foreach(Transform t in transform)
         {
-            Character c = t.GetComponent<Character>();
+            Elementor c = t.GetComponent<Elementor>();
             if(c.ai)
                 c.ChooseRandomAction();
         }
+        */
     }
 }
