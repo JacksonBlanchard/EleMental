@@ -2982,8 +2982,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92475af4c577fe49bd72e973271b081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_xTileGap: 1.5
-  m_zTileGap: 1.3
+  m_colDiffVec3: {x: 1.4957, y: 0, z: 0}
+  m_rowDiffVec3: {x: 0.74783, y: 0, z: -1.2953}
   m_hexTilePrefab: {fileID: 2404996005632796914, guid: 8053d70ad849bf04daa5257bd8a3cf28,
     type: 3}
   m_elementManager: {fileID: 1526210962}
@@ -7896,7 +7896,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.8352881}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 11.4775}
+  m_AnchoredPosition: {x: 0, y: 11.477478}
   m_SizeDelta: {x: 0, y: -23.045}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1941894910

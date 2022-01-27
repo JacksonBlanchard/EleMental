@@ -8,59 +8,36 @@ public enum DirectionEnum { SELF_SELECT, E_SELECT, SE_SELECT, SW_SELECT, W_SELEC
 
 public class Board : MonoBehaviour
 {
+    [SerializeField] private UIManager m_uiManager;
+    [SerializeField] private TeamManager m_teamManager;
+    [SerializeField] private ElementManager m_elementManager;
+
+    [SerializeField] private Vector3 m_colDiffVec3 = new Vector3(1.4957f, 0, 0);
+    [SerializeField] private Vector3 m_rowDiffVec3 = new Vector3(0.74783f, 0, -1.2953f);
+    [SerializeField] private GameObject m_hexTilePrefab;
+
     private int m_rows;
     private int m_cols;
-    private int m_cornerCutSize;
-    public float m_xTileGap = 1.5f;
-    public float m_zTileGap = 1.3f;
-    public GameObject m_hexTilePrefab;
     private HexTile[,] m_tiles;
-
-    public ElementManager m_elementManager;
-    public TeamManager m_teamManager;
-    public UIManager m_uiManager;
 
     void Start()
     {
         if (m_rows == 0 || m_cols == 0)
         {
-            //SetRadius(5);
-            SetDimensions(8, 13, 5);
+            SetDimensions(10, 10);
         }
     }
 
-    public void SetRadius(int radius)
-    {
-        // include center tile
-        m_rows = 2 * radius + 1;
-        m_cols = 2 * radius + 1;
-        m_cornerCutSize = radius;
-        GenerateBoard();
-    }
-
-    private void SetDimensions(int rows, int cols, int cornerCutSize)
+    public void SetDimensions(int rows, int cols)
     {
         m_rows = rows;
         m_cols = cols;
-        m_cornerCutSize = cornerCutSize;
         GenerateBoard();
     }
 
-    public void SetCharPositions()
+    public void EraseBoard()
     {
-        // hardcode for now
-        if (m_teamManager.NumTeams() == 2)
-        {
-            HexTile p1StartPos = GetNeighbor(GetFurthest(DirectionEnum.W_MOVE), DirectionEnum.E_MOVE);
-            p1StartPos.SetElementor(m_teamManager.GetTeam(0).GetElementorGO(0));
-            HexTile o1StartPos = GetNeighbor(GetFurthest(DirectionEnum.E_MOVE), DirectionEnum.W_MOVE);
-            o1StartPos.SetElementor(m_teamManager.GetTeam(1).GetElementorGO(0));
-        }
-    }
-
-    public void GenerateBoard()
-    {
-        // Erase the current board
+        // Destroy all children of the current board.
         if (transform.childCount != 0)
         {
             foreach (Transform child in transform)
@@ -68,57 +45,87 @@ public class Board : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
- 
-        /*
-           Example 3x3 Array
-          -------------------
-          | 0,0 | 0,1 | 0,2 |
-          | nul | hex | hex |
-          |------------------
-          | 1,0 | 1,1 | 1,2 |
-          | hex | hex | hex |
-          |------------------
-          | 2,0 | 2,1 | 2,2 |
-          | hex | hex | nul |
-          -------------------
-        */
+    }
 
+    public Vector3 ComputeTopLeftCornerPosition()
+    {
+        float totalTileHeightUnits = m_rows - 1;
+        float totalTileWidthUnits = (m_cols - 1) + (totalTileHeightUnits / 2);
+        float totalBoardHeight = totalTileHeightUnits * m_rowDiffVec3.z;
+        float totalBoardWidth = totalTileWidthUnits * m_colDiffVec3.x;
+        return new Vector3(totalBoardWidth / -2, 0, totalBoardHeight / -2);
+    }
+
+    public void GenerateBoard()
+    {
+        // Erase the current board before creating a new one.
+        EraseBoard();
+ 
         // Initialize 2D HexTile array.
         m_tiles = new HexTile[m_rows, m_cols];
 
-        int middleRow = m_rows / 2;
-        int middleCol = m_cols / 2;
-        float xHalfGap = m_zTileGap / 2f;
-
-        // Offset from (0x,0y,0z) for tile GameObject positions
-        float xOffset;
-        float zOffset;
+        // Calculate the position of the top left corner tile.
+        Vector3 topLeftPosition = ComputeTopLeftCornerPosition();
 
         // Generate the new board.
         for (int i = 0; i < m_rows; i++)
         {
-            // Initialize the starting offset for each row.
-            // Horizontal (x) axis moves half the gap for each row down.
-            // Vertical (z) axis moves the full gap for each row down.
-            xOffset = i * xHalfGap;
-            zOffset = i * -m_zTileGap;
+            // Initialize the starting position for each row from the top left corner.
+            Vector3 position = topLeftPosition + (i * m_rowDiffVec3);
+
+            for (int j = 0; j < m_cols; j++)
+            {
+                // Create and set up the new tile GameObject.
+                GameObject tile = Instantiate(m_hexTilePrefab, position, Quaternion.identity);
+                tile.name = "Tile[" + i + "," + j + "]";
+                tile.GetComponent<HexTile>().SetCoordinates(i, j);
+                tile.transform.parent = transform;
+                tile.layer = gameObject.layer;
+                // Add the new HexTile Component to the 2D HexTile array.
+                m_tiles[i, j] = tile.GetComponent<HexTile>();
+
+                // Increase the next tile's position by one column distance.
+                position += m_colDiffVec3;
+            }
+        }
+    }
+
+    public void GenerateCircularBoard(int radius)
+    {
+        // Erase the current board before creating a new one.
+        EraseBoard();
+
+        // The center tile must be included for the board to be circular.
+        m_rows = m_cols = 2 * radius + 1;
+ 
+        // Initialize 2D HexTile array.
+        m_tiles = new HexTile[m_rows, m_cols];
+
+        // Calculate the position of the top left corner tile.
+        Vector3 topLeftPosition = ComputeTopLeftCornerPosition();
+
+        // Generate the new board.
+        for (int i = 0; i < m_rows; i++)
+        {
+            // Initialize the starting position for each row from the top left corner.
+            Vector3 position = topLeftPosition + (i * m_rowDiffVec3);
 
             for (int j = 0; j < m_cols; j++)
             {
                 // Top Left Corner: less than the line value from [middle,0] -> [0,middle]
-                if (i + j < m_cornerCutSize)
+                if (i + j < radius)
                 {
                     m_tiles[i, j] = null;
                 }
                 // Bottom Right Corner: more than the line value from [middle,size] -> [size,middle]
-                else if (i + j > (m_rows - 1) + (m_cols - 1) - m_cornerCutSize)
+                else if (i + j > (m_rows - 1) + (m_cols - 1) - radius)
                 {
                     m_tiles[i, j] = null;
                 }
                 else
                 {
                     // Otherwise create and set up new tile GameObject.
-                    GameObject tile = Instantiate(m_hexTilePrefab, new Vector3(xOffset, 0, zOffset), Quaternion.identity);
+                    GameObject tile = Instantiate(m_hexTilePrefab, position, Quaternion.identity);
                     tile.name = "Tile[" + i + "," + j + "]";
                     tile.GetComponent<HexTile>().SetCoordinates(i, j);
                     tile.transform.parent = transform;
@@ -127,8 +134,8 @@ public class Board : MonoBehaviour
                     m_tiles[i, j] = tile.GetComponent<HexTile>();
                 }
 
-                // Increase the horizontal offset one tile gap
-                xOffset += m_xTileGap;
+                // Increase the next tile's position by one column distance.
+                position += m_colDiffVec3;
             }
         }
     }
@@ -156,6 +163,18 @@ public class Board : MonoBehaviour
             {
                 Console.WriteLine(line);
             }
+        }
+    }
+
+    public void SetCharPositions()
+    {
+        // hardcode for now
+        if (m_teamManager.NumTeams() == 2)
+        {
+            HexTile p1StartPos = GetNeighbor(GetFurthest(DirectionEnum.W_MOVE), DirectionEnum.E_MOVE);
+            p1StartPos.SetElementor(m_teamManager.GetTeam(0).GetElementorGO(0));
+            HexTile o1StartPos = GetNeighbor(GetFurthest(DirectionEnum.E_MOVE), DirectionEnum.W_MOVE);
+            o1StartPos.SetElementor(m_teamManager.GetTeam(1).GetElementorGO(0));
         }
     }
 
